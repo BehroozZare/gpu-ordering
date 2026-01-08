@@ -1,0 +1,17 @@
+[04:20:12] [info] RXMesh: Total number of device: 1
+[04:20:12] [info] RXMesh: Using device Number: 0
+[04:20:12] [info] RXMesh: Device name: NVIDIA GeForce RTX 3080 Ti
+[04:20:12] [info] RXMesh: Compute Capability: 8.6
+[04:20:12] [info] RXMesh: Total amount of global memory (MB): 11920.6
+[04:20:12] [info] RXMesh: 80 Multiprocessors, 128 CUDA Cores/MP: 10240 CUDA Cores
+[04:20:12] [info] RXMesh: Maximum # blocks per SM: 16
+[04:20:12] [info] RXMesh: ECC support: Disabled
+[04:20:12] [info] RXMesh: GPU Max Clock rate: 1800.0 MHz (1.80 GHz)
+[04:20:12] [info] RXMesh: Memory Clock rate: 9501.0 Mhz
+[04:20:12] [info] RXMesh: Memory Bus Width:  384-bit
+[04:20:12] [info] RXMesh: Peak Memory Bandwidth: 912.096000(GB/s)
+[04:20:12] [info] RXMesh: Kernels compiled for compute capability: 860
+[04:20:12] [info] RXMesh: Using cuSolver Version 11.7.2
+[04:20:12] [info] RXMesh: Using cuSparse Version 12.5.7
+[04:20:12] [info] RXMesh: Using cuBlas Version 12.8.3
+[04:20:12] [info] RXMesh: Using cuDSS Version 0.7.1

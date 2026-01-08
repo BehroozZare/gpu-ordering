@@ -56,7 +56,7 @@ def main():
     
     # Create the plot
     scale_factor = 2
-    fig, ax = plt.subplots(figsize=(3.36 * scale_factor, 2.5 * scale_factor))
+    fig, ax = plt.subplots(figsize=(3.36 * scale_factor, 2 * scale_factor))
     
     ax.scatter(filtered_df["G_N"], filtered_df["symbolic_percentage"], 
                alpha=0.7, edgecolors='black', linewidth=0.5)
