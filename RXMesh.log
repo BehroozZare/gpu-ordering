@@ -1,52 +1,52 @@
-[23:54:38] [info] RXMesh: Total number of device: 1
-[23:54:38] [info] RXMesh: Using device Number: 0
-[23:54:38] [info] RXMesh: Device name: NVIDIA GeForce RTX 3080 Ti
-[23:54:38] [info] RXMesh: Compute Capability: 8.6
-[23:54:38] [info] RXMesh: Total amount of global memory (MB): 11920.6
-[23:54:38] [info] RXMesh: 80 Multiprocessors, 128 CUDA Cores/MP: 10240 CUDA Cores
-[23:54:38] [info] RXMesh: Maximum # blocks per SM: 16
-[23:54:38] [info] RXMesh: ECC support: Disabled
-[23:54:38] [info] RXMesh: GPU Max Clock rate: 1800.0 MHz (1.80 GHz)
-[23:54:38] [info] RXMesh: Memory Clock rate: 9501.0 Mhz
-[23:54:38] [info] RXMesh: Memory Bus Width:  384-bit
-[23:54:38] [info] RXMesh: Peak Memory Bandwidth: 912.096000(GB/s)
-[23:54:38] [info] RXMesh: Kernels compiled for compute capability: 860
-[23:54:38] [info] RXMesh: Using cuSolver Version 11.7.2
-[23:54:38] [info] RXMesh: Using cuSparse Version 12.5.7
-[23:54:38] [info] RXMesh: Using cuBlas Version 12.8.3
-[23:54:38] [info] RXMesh: Using cuDSS Version 0.7.1
-[23:54:58] [info] RXMesh: Patcher: (Face) Edge Cut = 206155, (Vertex) Edge Cut = 467901 
-[23:54:58] [info] RXMesh: Patcher: num_patches = 6875
-[23:54:58] [info] RXMesh: Patcher: patches_size = 512
-[23:54:58] [info] RXMesh: Patcher: num_components = 0
-[23:54:58] [info] RXMesh: Patcher: Num lloyd run = 0
-[23:54:58] [info] RXMesh: Patcher: Parallel patches construction time = 8160.707 (ms) and 0 (ms/lloyd_run)
-[23:54:58] [info] RXMesh: Patcher: max_patch_size= 733, min_patch_size= 549, avg_patch_size= 655
-[23:54:58] [info] RXMesh: Patcher: number external ribbon faces = 989644 (28.12%)
-[23:55:06] [info] RXMesh: Num colors = 15
-[23:55:08] [info] RXMesh: #Vertices = 1759781, #Faces= 3519558, #Edges= 5279337, #Patches = 6875
-[23:55:08] [info] RXMesh: Input is edge manifold
-[23:55:08] [info] RXMesh: Input is closed
-[23:55:08] [info] RXMesh: Input max valence = 12
-[23:55:08] [info] RXMesh: max edge incident faces = 2
-[23:55:08] [info] RXMesh: max face adjacent faces = 3
-[23:55:08] [info] RXMesh: per-patch maximum face count = 733
-[23:55:08] [info] RXMesh: per-patch maximum edge count = 1162
-[23:55:08] [info] RXMesh: per-patch maximum vertex count = 431
-[23:55:08] [info] RXMesh: 1) build time = 27648.686 (ms)
-[23:55:08] [info] RXMesh: 2) populate_patch_stash time = 152.10269 (ms)
-[23:55:08] [info] RXMesh: 3) patch graph coloring time = 8.662327 (ms)
-[23:55:08] [info] RXMesh: 4) build_device time = 2091.0464 (ms)
-[23:55:08] [info] RXMesh:  -buildHT time = 1474.6504 (ms)
-[23:55:08] [info] RXMesh:    --lower_bound time = 296.7861 (ms)
-[23:55:08] [info] RXMesh:    --ht.insert time = 134.91026 (ms)
-[23:55:08] [info] RXMesh:    --hashtable.move time = 122.39359 (ms)
-[23:55:08] [info] RXMesh:    --LPHashTable time = 164.71465 (ms)
-[23:55:08] [info] RXMesh:  -bitmask time = 247.54097 (ms)
-[23:55:08] [info] RXMesh:    --bitmask.cudaMemcpy time = 76.947914 (ms)
-[23:55:08] [info] RXMesh: 5) PatchScheduler time = 0.105437 (ms)
-[23:55:08] [info] RXMesh: 6) allocate_extra_patches time = 0.203769 (ms)
-[23:55:08] [info] RXMesh: 7) context.init time = 0.034524 (ms)
-[23:55:08] [info] RXMesh: cudaMemcpy time = 153.76678 (ms)
-[23:55:08] [info] RXMesh: cudaMalloc time = 202.80298 (ms)
-[23:55:08] [info] RXMesh: malloc time = 3.320478 (ms)
+[13:55:53] [info] RXMesh: Total number of device: 1
+[13:55:53] [info] RXMesh: Using device Number: 0
+[13:55:53] [info] RXMesh: Device name: NVIDIA GeForce RTX 3080 Ti
+[13:55:53] [info] RXMesh: Compute Capability: 8.6
+[13:55:53] [info] RXMesh: Total amount of global memory (MB): 11920.6
+[13:55:53] [info] RXMesh: 80 Multiprocessors, 128 CUDA Cores/MP: 10240 CUDA Cores
+[13:55:53] [info] RXMesh: Maximum # blocks per SM: 16
+[13:55:53] [info] RXMesh: ECC support: Disabled
+[13:55:53] [info] RXMesh: GPU Max Clock rate: 1800.0 MHz (1.80 GHz)
+[13:55:53] [info] RXMesh: Memory Clock rate: 9501.0 Mhz
+[13:55:53] [info] RXMesh: Memory Bus Width:  384-bit
+[13:55:53] [info] RXMesh: Peak Memory Bandwidth: 912.096000(GB/s)
+[13:55:53] [info] RXMesh: Kernels compiled for compute capability: 860
+[13:55:53] [info] RXMesh: Using cuSolver Version 11.7.2
+[13:55:53] [info] RXMesh: Using cuSparse Version 12.5.7
+[13:55:53] [info] RXMesh: Using cuBlas Version 12.8.3
+[13:55:53] [info] RXMesh: Using cuDSS Version 0.7.1
+[13:55:55] [info] RXMesh: Patcher: (Face) Edge Cut = 32737, (Vertex) Edge Cut = 77058 
+[13:55:55] [info] RXMesh: Patcher: num_patches = 1184
+[13:55:55] [info] RXMesh: Patcher: patches_size = 512
+[13:55:55] [info] RXMesh: Patcher: num_components = 0
+[13:55:55] [info] RXMesh: Patcher: Num lloyd run = 0
+[13:55:55] [info] RXMesh: Patcher: Parallel patches construction time = 929.72705 (ms) and 0 (ms/lloyd_run)
+[13:55:55] [info] RXMesh: Patcher: max_patch_size= 742, min_patch_size= 588, avg_patch_size= 650
+[13:55:55] [info] RXMesh: Patcher: number external ribbon faces = 164154 (27.09%)
+[13:55:56] [info] RXMesh: Num colors = 16
+[13:55:56] [info] RXMesh: #Vertices = 302919, #Faces= 605850, #Edges= 908775, #Patches = 1184
+[13:55:56] [info] RXMesh: Input is edge manifold
+[13:55:56] [info] RXMesh: Input is closed
+[13:55:56] [info] RXMesh: Input max valence = 16
+[13:55:56] [info] RXMesh: max edge incident faces = 2
+[13:55:56] [info] RXMesh: max face adjacent faces = 3
+[13:55:56] [info] RXMesh: per-patch maximum face count = 742
+[13:55:56] [info] RXMesh: per-patch maximum edge count = 1180
+[13:55:56] [info] RXMesh: per-patch maximum vertex count = 439
+[13:55:56] [info] RXMesh: 1) build time = 2972.3887 (ms)
+[13:55:56] [info] RXMesh: 2) populate_patch_stash time = 17.726639 (ms)
+[13:55:56] [info] RXMesh: 3) patch graph coloring time = 1.378695 (ms)
+[13:55:56] [info] RXMesh: 4) build_device time = 322.10754 (ms)
+[13:55:56] [info] RXMesh:  -buildHT time = 222.65211 (ms)
+[13:55:56] [info] RXMesh:    --lower_bound time = 45.84129 (ms)
+[13:55:56] [info] RXMesh:    --ht.insert time = 21.587551 (ms)
+[13:55:56] [info] RXMesh:    --hashtable.move time = 20.814455 (ms)
+[13:55:56] [info] RXMesh:    --LPHashTable time = 25.711496 (ms)
+[13:55:56] [info] RXMesh:  -bitmask time = 40.08796 (ms)
+[13:55:56] [info] RXMesh:    --bitmask.cudaMemcpy time = 12.94311 (ms)
+[13:55:56] [info] RXMesh: 5) PatchScheduler time = 0.033456 (ms)
+[13:55:56] [info] RXMesh: 6) allocate_extra_patches time = 0.194364 (ms)
+[13:55:56] [info] RXMesh: 7) context.init time = 0.034529 (ms)
+[13:55:56] [info] RXMesh: cudaMemcpy time = 26.484983 (ms)
+[13:55:56] [info] RXMesh: cudaMalloc time = 30.857882 (ms)
+[13:55:56] [info] RXMesh: malloc time = 0.5551115 (ms)

@@ -1,0 +1,4 @@
+mesh_name,G_N,G_NNZ,solver_type,ordering_type,nd_levels,patch_type,use_patch_separator,local_permute_method,patch_size,patch_time,node_to_patch_time,decompose_time,local_permute_time,assemble_time,factor/matrix NNZ ratio,ordering_time,ordering_integration_time,analysis_time,factorization_time,solve_time,residual
+Murex_Romosus,1759781,12318455,MKL,METIS,0,,1,amd,0,0,0,0,0,0,6.56583,10274,0,1529,643,246,9.95748e-14
+dragon,10000,70000,MKL,METIS,0,,1,amd,0,0,0,0,0,0,3.02013,30,0,12,9,1,7.52727e-15
+Aloisus_C,302919,2120469,MKL,METIS,0,,1,amd,0,0,0,0,0,0,4.82265,1418,0,243,110,41,4.14148e-14
