@@ -11,9 +11,12 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib as mpl
 
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
-mpl.rcParams['font.size'] = 12
+# mpl.rcParams['pdf.fonttype'] = 42
+# mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['font.size'] = 12
+
+mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
+mpl.rcParams['font.size'] = 18
 
 def main():
     # Get the path to the data file
@@ -59,7 +62,7 @@ def main():
     fig, ax = plt.subplots(figsize=(3.36 * scale_factor, 2 * scale_factor))
     
     ax.scatter(filtered_df["G_N"], filtered_df["symbolic_percentage"], 
-               alpha=0.7, edgecolors='black', linewidth=0.5)
+               alpha=0.8, edgecolors='black', linewidth=0.2, s=120)
     
     # Use log scale for x-axis due to wide range of G_N values
     ax.set_xscale("log")
@@ -68,9 +71,9 @@ def main():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     
-    ax.set_xlabel(r"number of mesh vertices")
-    ax.set_ylabel("Ordering time / Total time (%)")
-    ax.set_title("Ordering Bottleneck (CUDSS)")
+    ax.set_xlabel(r"#V")
+    ax.set_ylabel("Permutation time / Total time (%)")
+    #ax.set_title("Ordering Bottleneck (CUDSS)")
     
     ax.grid(True, alpha=0.3)
     
@@ -79,8 +82,8 @@ def main():
     min_pct = filtered_df["symbolic_percentage"].min()
     max_pct = filtered_df["symbolic_percentage"].max()
     
-    stats_text = f"Mean: {mean_pct:.1f}%\nMin: {min_pct:.1f}%\nMax: {max_pct:.1f}%"
-    ax.text(0.02, 0.98, stats_text, transform=ax.transAxes,
+    stats_text = f"Avg:  {mean_pct:.1f}%\nMin:  {min_pct:.1f}%\nMax:  {max_pct:.1f}%"
+    ax.text(0.5, 0.5, stats_text, transform=ax.transAxes,
             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
     
     plt.tight_layout()
