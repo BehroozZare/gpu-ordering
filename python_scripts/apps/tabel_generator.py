@@ -187,8 +187,16 @@ def format_max_iter(max_iter):
 def generate_latex_table_rows(results):
     """Generate LaTeX table rows from results."""
     lines = []
+    current_app = None
     for r in results:
-        line = f"    {r['app_name']:13} & {r['setting']:8} & {r['G_N']:>10} & {r['num_iter']:5} & {format_speedup(r['speedup']):>10} & {format_max_iter(r['max_iter']):>8} \\\\"
+        # Add horizontal line between different applications
+        if current_app is not None and current_app != r['app_name']:
+            lines.append("    \\hline")
+        current_app = r['app_name']
+        
+        # Escape underscores in mesh name for LaTeX
+        mesh_name_latex = r['mesh_name'].replace("_", "\\_")
+        line = f"    {r['app_name']:13} & {r['setting']:8} & {mesh_name_latex:25} & {r['G_N']:>10} & {r['num_iter']:5} & {format_speedup(r['speedup']):>10} & {format_max_iter(r['max_iter']):>8} \\\\"
         lines.append(line)
     return "\n".join(lines)
 
@@ -201,7 +209,8 @@ def main():
     print("Application Benchmark Table Generator")
     print("=" * 60)
     
-    all_results = []
+    # Store results grouped by application
+    results_by_app = {}
     
     # Process each application
     for app_name in APP_SETTINGS.keys():
@@ -212,28 +221,52 @@ def main():
         csv_path = data_dir / folder_name / file_name
         
         results = process_app_data(app_name, csv_path)
-        all_results.extend(results)
+        if results:
+            results_by_app[app_name] = results
     
-    # Print results
-    print("\n" + "=" * 60)
-    print("Results Summary")
-    print("=" * 60)
+    # Print results grouped by application
+    print("\n" + "=" * 80)
+    print("Results Summary (By Application)")
+    print("=" * 80)
     
-    if not all_results:
+    if not results_by_app:
         print("No results to display. Make sure CSV files exist in the data folder.")
         return
     
-    # Print as table
-    print(f"\n{'App':<13} {'Setting':<8} {'Mesh size':>12} {'#iter':>6} {'Speedup':>10} {'Max iter':>10}")
-    print("-" * 70)
+    all_results = []
+    
+    for app_name, app_results in results_by_app.items():
+        setting = APP_SETTINGS.get(app_name, "")
+        print(f"\n{'='*80}")
+        print(f"Application: {app_name} (Setting: {setting})")
+        print(f"{'='*80}")
+        print(f"{'Mesh Name':<30} {'Mesh Size':>12} {'#iter':>6} {'Speedup':>10} {'Max iter':>10}")
+        print("-" * 80)
+        
+        for r in app_results:
+            print(f"{r['mesh_name']:<30} {r['G_N']:>12} {r['num_iter']:>6} {format_speedup(r['speedup']):>10} {format_max_iter(r['max_iter']):>10}")
+            all_results.append(r)
+        
+        # Print application summary if multiple meshes
+        if len(app_results) > 1:
+            avg_speedup = sum(r['speedup'] for r in app_results if not math.isinf(r['speedup'])) / len([r for r in app_results if not math.isinf(r['speedup'])])
+            print("-" * 80)
+            print(f"{'Average':<30} {'':<12} {'':<6} {format_speedup(avg_speedup):>10}")
+    
+    # Print combined table
+    print("\n" + "=" * 80)
+    print("Combined Table (All Applications)")
+    print("=" * 80)
+    print(f"\n{'App':<13} {'Setting':<8} {'Mesh Name':<25} {'Mesh Size':>12} {'#iter':>6} {'Speedup':>10} {'Max iter':>10}")
+    print("-" * 95)
     
     for r in all_results:
-        print(f"{r['app_name']:<13} {r['setting']:<8} {r['G_N']:>12} {r['num_iter']:>6} {format_speedup(r['speedup']):>10} {format_max_iter(r['max_iter']):>10}")
+        print(f"{r['app_name']:<13} {r['setting']:<8} {r['mesh_name']:<25} {r['G_N']:>12} {r['num_iter']:>6} {format_speedup(r['speedup']):>10} {format_max_iter(r['max_iter']):>10}")
     
     # Print LaTeX format
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 80)
     print("LaTeX Table Rows")
-    print("=" * 60)
+    print("=" * 80)
     print(generate_latex_table_rows(all_results))
 
 
