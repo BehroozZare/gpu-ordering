@@ -125,7 +125,7 @@ def main():
     
     # Create the plot with two subplots stacked vertically
     scale_factor = 2
-    fig, (ax_cudss, ax_mkl) = plt.subplots(2, 1, figsize=(3.36 * scale_factor, 2.5 * scale_factor * 2))
+    fig, (ax_cudss, ax_mkl) = plt.subplots(2, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 2))
     
     # Plot CUDSS on top
     plot_speedup(ax_cudss, cudss_df, "CUDSS")
