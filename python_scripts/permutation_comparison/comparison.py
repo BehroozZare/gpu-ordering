@@ -192,7 +192,7 @@ def main():
     amd_df = pd.read_csv(data_dir / "amd_benchmark.csv")
     metis_df = pd.read_csv(data_dir / "metis_benchmark.csv")
     parmetis_df = pd.read_csv(data_dir / "parmetis_benchmark.csv")
-    patch_df = pd.read_csv(data_dir / "patch_metis_benchmark.csv")
+    patch_df = pd.read_csv(data_dir / "patch_amd_benchmark.csv")
     
     print(f"AMD entries: {len(amd_df)}")
     print(f"METIS entries: {len(metis_df)}")
