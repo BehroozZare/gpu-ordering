@@ -14,8 +14,11 @@ from pathlib import Path
 import matplotlib as mpl
 
 # Matplotlib configuration for publication-quality figures
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['pdf.fonttype'] = 42
+# mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['font.size'] = 12
+
+mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
 mpl.rcParams['font.size'] = 12
 
 
@@ -94,7 +97,7 @@ def plot_fill_in_ratio(ax, df):
     y, _ = get_y_positions_with_gap(n_per_group=2, gap=0.5)
     
     # Use different colors for different local permutation methods
-    colors = ['C1' if 'METIS' in label else 'C0' for label in labels]
+    colors = ['coral' if 'METIS' in label else 'plum' for label in labels]
     
     ax.barh(y, fill_in_values, color=colors, edgecolor='black', linewidth=0.5)
     
@@ -135,7 +138,7 @@ def plot_runtime(ax, df):
     y, _ = get_y_positions_with_gap(n_per_group=2, gap=0.5)
     
     # Use different colors for different local permutation methods
-    colors = ['C1' if 'METIS' in label else 'C0' for label in labels]
+    colors = ['coral' if 'METIS' in label else 'plum' for label in labels]
     
     ax.barh(y, runtime_values, color=colors, edgecolor='black', linewidth=0.5)
     
@@ -155,8 +158,8 @@ def plot_runtime(ax, df):
     # Add legend
     from matplotlib.patches import Patch
     legend_elements = [
-        Patch(facecolor='C0', edgecolor='black', label='AMD'),
-        Patch(facecolor='C1', edgecolor='black', label='METIS')
+        Patch(facecolor='plum', edgecolor='black', label='AMD'),
+        Patch(facecolor='coral', edgecolor='black', label='METIS')
     ]
     ax.legend(handles=legend_elements, loc='upper right')
 

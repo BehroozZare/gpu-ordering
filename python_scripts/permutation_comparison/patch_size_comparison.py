@@ -12,10 +12,14 @@ import numpy as np
 from pathlib import Path
 import matplotlib as mpl
 
-# Matplotlib configuration for publication-quality figures
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
+
+mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
 mpl.rcParams['font.size'] = 12
+
+# Matplotlib configuration for publication-quality figures
+# mpl.rcParams['pdf.fonttype'] = 42
+# mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['font.size'] = 12
 
 
 def load_data():
@@ -23,7 +27,7 @@ def load_data():
     script_dir = Path(__file__).parent
     # Data is in the output directory
     data_path = script_dir.parent.parent / "output" / "patch_ordering_ablation" / "patch_size_effect.csv"
-    df = pd.read_csv(data_path)
+    df = pd.read_csv("data/patch_size_effect.csv")
     
     # Create display names for meshes
     df["display_name"] = df["mesh_name"].map({
@@ -34,8 +38,8 @@ def load_data():
     # Filter to only include the meshes we want
     df = df[df["display_name"].notna()]
     
-    # Remove patch size 64
-    df = df[df["patch_size"] != 64]
+    # Remove patch size 32
+    df = df[df["patch_size"] != 32]
     
     return df
 
@@ -126,17 +130,17 @@ def plot_runtime_breakdown(ax, df):
     component_cols = [c[0] for c in components]
     df_sorted["total_runtime"] = df_sorted[component_cols].sum(axis=1)
     
-    # Get normalization factors: total runtime of patch_size=512 for each mesh
+    # Get normalization factors: total runtime of patch_size=256 for each mesh
     norm_factors = {}
     for mesh in ["Small", "Large"]:
-        mesh_512 = df_sorted[(df_sorted["display_name"] == mesh) & 
-                             (df_sorted["patch_size"] == 512)]
-        norm_factors[mesh] = mesh_512["total_runtime"].values[0]
+        mesh_256 = df_sorted[(df_sorted["display_name"] == mesh) & 
+                             (df_sorted["patch_size"] == 256)]
+        norm_factors[mesh] = mesh_256["total_runtime"].values[0]
     
     # Create normalization array matching df_sorted order
     norm_array = df_sorted["display_name"].map(norm_factors).values
     
-    # Prepare normalized data (normalized to respective 512 configuration)
+    # Prepare normalized data (normalized to respective 256 configuration)
     normalized_data = {}
     for col, label, _ in components:
         normalized_data[label] = (df_sorted[col] / norm_array).values
@@ -155,7 +159,7 @@ def plot_runtime_breakdown(ax, df):
     
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
-    ax.set_xlabel("Normalized Runtime (relative to patch size 512)")
+    ax.set_xlabel("Normalized Runtime (relative to patch size 256)")
     
     # Remove top/right spines
     ax.spines['top'].set_visible(False)

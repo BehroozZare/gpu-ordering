@@ -16,9 +16,12 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib as mpl
 
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
-mpl.rcParams['font.size'] = 12
+mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
+mpl.rcParams['font.size'] = 18
+
+# mpl.rcParams['pdf.fonttype'] = 42
+# mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['font.size'] = 12
 
 
 def get_best_patch_ordering(df):
@@ -128,7 +131,7 @@ def compute_ordering_speedup(baseline_df, patch_df):
 def plot_speedup(ax, merged_df, baseline_name, color='C0'):
     """Plot ordering speedup data on the given axes."""
     ax.scatter(merged_df["G_N"], merged_df["speedup"],
-               alpha=0.7, edgecolors='black', linewidth=0.5, color=color)
+               alpha=0.7, edgecolors='black', linewidth=0.2, color=color, s=120)
     
     # Log scale for x-axis due to wide range of G_N values
     ax.set_xscale("log")
@@ -140,7 +143,7 @@ def plot_speedup(ax, merged_df, baseline_name, color='C0'):
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     
-    ax.set_ylabel(f"Ordering Speedup vs {baseline_name}")
+    ax.set_ylabel(f"Speedup vs. {baseline_name}")
     ax.grid(True, alpha=0.3)
     
     # Statistics text box
@@ -176,7 +179,7 @@ def plot_nnz_ratio(ax, merged_df, baseline_name, color='C0'):
     min_ratio = merged_df["nnz_improvement"].min()
     max_ratio = merged_df["nnz_improvement"].max()
     
-    stats_text = f"Mean: {mean_ratio:.2f}x\nMin: {min_ratio:.2f}x\nMax: {max_ratio:.2f}x"
+    stats_text = f"Avg: {mean_ratio:.2f}x\nMin: {min_ratio:.2f}x\nMax: {max_ratio:.2f}x"
     ax.text(0.02, 0.98, stats_text, transform=ax.transAxes,
             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
@@ -228,11 +231,13 @@ def main():
     )
     
     # Plot speedups
-    plot_speedup(ax_amd, amd_speedup, "AMD", color='C0')
-    plot_speedup(ax_metis, metis_speedup, "METIS", color='C1')
-    plot_speedup(ax_parmetis, parmetis_speedup, "ParMETIS", color='C2')
+    plot_speedup(ax_amd, amd_speedup, "AMD", color='plum')
+    plot_speedup(ax_metis, metis_speedup, "METIS", color='coral')
+    plot_speedup(ax_parmetis, parmetis_speedup, "ParMETIS", color='silver')
     
     # Only set x-label on bottom plot
+    ax_amd.set_xlabel("Number of mesh vertices")
+    ax_metis.set_xlabel("Number of mesh vertices")
     ax_parmetis.set_xlabel("Number of mesh vertices")
     
     plt.tight_layout()
@@ -243,24 +248,24 @@ def main():
     print(f"Speedup plot saved to: {output_path}")
     
     # Create figure with 3 subplots for NNZ ratio comparison
-    fig2, (ax_amd_nnz, ax_metis_nnz, ax_parmetis_nnz) = plt.subplots(
-        3, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 3)
-    )
+    # fig2, (ax_amd_nnz, ax_metis_nnz, ax_parmetis_nnz) = plt.subplots(
+    #     3, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 3)
+    # )
     
-    # Plot NNZ ratio improvements
-    plot_nnz_ratio(ax_amd_nnz, amd_nnz, "AMD", color='C0')
-    plot_nnz_ratio(ax_metis_nnz, metis_nnz, "METIS", color='C1')
-    plot_nnz_ratio(ax_parmetis_nnz, parmetis_nnz, "ParMETIS", color='C2')
+    # # Plot NNZ ratio improvements
+    # plot_nnz_ratio(ax_amd_nnz, amd_nnz, "AMD", color='C0')
+    # plot_nnz_ratio(ax_metis_nnz, metis_nnz, "METIS", color='C1')
+    # plot_nnz_ratio(ax_parmetis_nnz, parmetis_nnz, "ParMETIS", color='C2')
     
-    # Only set x-label on bottom plot
-    ax_parmetis_nnz.set_xlabel("Number of mesh vertices")
+    # # Only set x-label on bottom plot
+    # ax_parmetis_nnz.set_xlabel("Number of mesh vertices")
     
-    plt.tight_layout()
+    # plt.tight_layout()
     
-    # Save the NNZ ratio figure
-    nnz_output_path = result_dir / "nnz_ratio_comparison.pdf"
-    plt.savefig(nnz_output_path, dpi=150)
-    print(f"NNZ ratio plot saved to: {nnz_output_path}")
+    # # Save the NNZ ratio figure
+    # nnz_output_path = result_dir / "nnz_ratio_comparison.pdf"
+    # plt.savefig(nnz_output_path, dpi=150)
+    # print(f"NNZ ratio plot saved to: {nnz_output_path}")
     
     plt.show()
 

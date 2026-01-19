@@ -11,9 +11,12 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib as mpl
 
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
-mpl.rcParams['font.size'] = 12
+mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
+mpl.rcParams['font.size'] = 18
+
+# mpl.rcParams['pdf.fonttype'] = 42
+# mpl.rcParams['ps.fonttype'] = 42
+# mpl.rcParams['font.size'] = 12
 
 
 def compute_speedup_for_solver(df, solver_type):
@@ -82,7 +85,7 @@ def compute_speedup_for_solver(df, solver_type):
 def plot_speedup(ax, merged_df, solver_type, color='C0'):
     """Plot speedup data on the given axes."""
     ax.scatter(merged_df["G_N"], merged_df["speedup"], 
-               alpha=0.7, edgecolors='black', linewidth=0.5, color=color)
+               alpha=0.7, edgecolors='black', linewidth=0.2, color=color, s=120)
     
     # Use log scale for x-axis due to wide range of G_N values
     ax.set_xscale("log")
@@ -103,7 +106,7 @@ def plot_speedup(ax, merged_df, solver_type, color='C0'):
     min_speedup = merged_df["speedup"].min()
     max_speedup = merged_df["speedup"].max()
     
-    stats_text = f"Mean: {mean_speedup:.2f}x\nMin: {min_speedup:.2f}x\nMax: {max_speedup:.2f}x"
+    stats_text = f"Avg: {mean_speedup:.2f}x\nMin: {min_speedup:.2f}x\nMax: {max_speedup:.2f}x"
     ax.text(0.02, 0.98, stats_text, transform=ax.transAxes,
             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
@@ -129,9 +132,10 @@ def main():
     
     # Plot CUDSS on top
     plot_speedup(ax_cudss, cudss_df, "CUDSS")
+    ax_cudss.set_xlabel(r"Number of mesh vertices")
     
     # Plot MKL on bottom (red color)
-    plot_speedup(ax_mkl, mkl_df, "MKL", color='red')
+    plot_speedup(ax_mkl, mkl_df, "MKL", color='green')
     ax_mkl.set_xlabel(r"Number of mesh vertices")
     
     plt.tight_layout()
