@@ -15,7 +15,7 @@ APP_SETTINGS = {
     "SCP": "S1,F1,R2",
     "Smoothing": "S1,F2,R3",
     "NoiseSmoothing": "S1,F1,R1",
-    "IPC": "S2,F2,R1",
+    "SLIM": "S1,F2,R1",
     "IPC_no_col": "S1,F2,R1",
 }
 
