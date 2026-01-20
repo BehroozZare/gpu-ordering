@@ -1,0 +1,5 @@
+mesh_name,iteration,ordering_type,solver_type,G_N,G_NNZ,nd_levels,patch_type,patch_size,patch_time,factor/matrix NNZ ratio,ordering_init_time,ordering_time,ordering_integration_time,analysis_time,factorization_time,solve_time,residual
+reefcrab,0,DEFAULT,CUDSS,1000002,20561592,0,,0,0,0,0,0,9609,294,277,17,7.25654e-12
+reefcrab,0,PATCH_ORDERING,CUDSS,1000002,20561592,8,rxmesh,512,94,0,9710,935,89,369,435,28,7.50378e-12
+tyra_xyz,0,PATCH_ORDERING,CUDSS,100002,2013592,8,rxmesh,512,7,0,935,171,12,60,41,6,2.03349e-10
+tyra_xyz,0,DEFAULT,CUDSS,100002,2013592,0,,0,0,0,0,0,787,49,26,4,8.41733e-11
