@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib as mpl
 
-mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
+# mpl.rcParams['font.family'] = ['Palatino Linotype', 'TeX Gyre Pagella', 'serif']
+mpl.rcParams['font.family'] = ['TeX Gyre Pagella', 'serif']
 mpl.rcParams['font.size'] = 18
 
 # mpl.rcParams['pdf.fonttype'] = 42
