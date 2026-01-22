@@ -22,6 +22,68 @@ import argparse
 import blendertoolbox as bt
 
 
+def set_object_opaque_principled_material(obj, base_color_rgba, name="OpaqueMeshMaterial"):
+    """
+    Replace all material slots on `obj` with a guaranteed-opaque Principled material.
+    
+    Based on show_separator_as_point.py material setup for consistent rendering style.
+    """
+    if obj is None or getattr(obj, "data", None) is None:
+        return
+
+    mat = bpy.data.materials.new(name=name)
+    mat.use_nodes = True
+
+    # Ensure opaque render settings
+    if hasattr(mat, "blend_method"):
+        mat.blend_method = 'OPAQUE'
+    if hasattr(mat, "shadow_method"):
+        mat.shadow_method = 'OPAQUE'
+    try:
+        if hasattr(mat, "diffuse_color") and len(mat.diffuse_color) >= 4:
+            mat.diffuse_color = (base_color_rgba[0], base_color_rgba[1], base_color_rgba[2], 1.0)
+    except Exception:
+        pass
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new(type='ShaderNodeOutputMaterial')
+    principled = nodes.new(type='ShaderNodeBsdfPrincipled')
+
+    # Color + "soft balloon-ish" look, but fully opaque
+    principled.inputs['Base Color'].default_value = (
+        float(base_color_rgba[0]),
+        float(base_color_rgba[1]),
+        float(base_color_rgba[2]),
+        1.0,
+    )
+    if 'Roughness' in principled.inputs:
+        principled.inputs['Roughness'].default_value = 0.45
+    if 'Metallic' in principled.inputs:
+        principled.inputs['Metallic'].default_value = 0.0
+    if 'Alpha' in principled.inputs:
+        principled.inputs['Alpha'].default_value = 1.0
+    for trans_name in ('Transmission', 'Transmission Weight'):
+        if trans_name in principled.inputs:
+            principled.inputs[trans_name].default_value = 0.0
+    if 'Specular IOR Level' in principled.inputs:
+        principled.inputs['Specular IOR Level'].default_value = 0.25
+
+    links.new(principled.outputs['BSDF'], output.inputs['Surface'])
+
+    # Replace all slots to avoid leaving any transparent materials behind
+    mats = getattr(obj.data, "materials", None)
+    if mats is None:
+        return
+    if len(mats) == 0:
+        mats.append(mat)
+    else:
+        for idx in range(len(mats)):
+            mats[idx] = mat
+
+
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render a mesh beautifully')
@@ -95,11 +157,8 @@ def render_mesh(mesh_path, output_path, color_name='green', subdivision=1,
     if subdivision > 0:
         bt.subdivision(mesh, level=subdivision)
     
-    # Set material - balloon material gives a nice soft, diffuse look
-    # colorObj(RGBA, H, S, V, Bright, Contrast)
-    meshColor = bt.colorObj(color_rgba, 0.5, 1.0, 1.0, 0.0, 2.0)
-    AOStrength = 0.0
-    bt.setMat_balloon(mesh, meshColor, AOStrength)
+    # Set material - opaque Principled BSDF (consistent with show_separator_as_point.py)
+    set_object_opaque_principled_material(mesh, color_rgba, name="MeshOpaqueMaterial")
     
     # Set invisible ground (shadow catcher)
     bt.invisibleGround(shadowBrightness=0.9)
