@@ -360,7 +360,7 @@ def compute_auto_scale(centroids, num_patches):
     
     # Scale based on number of patches and bounding box
     node_radius = bbox_size / (math.sqrt(num_patches) * 4)
-    edge_radius = node_radius * 0.3
+    edge_radius = node_radius * 0.15
     
     # Clamp to reasonable values
     node_radius = max(0.01, min(0.2, node_radius))
@@ -612,7 +612,7 @@ def main():
     if args.patch_data is None:
         args.patch_data = os.path.join(
             script_dir, '..', '..', 'output', 'render_data',
-            f'{mesh_name}_vertex_to_patch.txt'
+            f'{mesh_name}_vertex_to_patch_patches11.txt'
         )
     
     if args.etree is None:

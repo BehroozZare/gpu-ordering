@@ -88,7 +88,7 @@ def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render a mesh beautifully')
     parser.add_argument('--mesh', type=str, 
-                        default='/media/behrooz/FarazHard/Last_Project/BenchmarkMesh/tri-mesh/final/beetle.obj',
+                        default='/media/behrooz/FarazHard/Last_Project/BenchmarkMesh/tri-mesh/final/dragon.obj',
                         help='Path to the mesh file (OBJ, PLY, etc.)')
     parser.add_argument('--output', type=str, default=None,
                         help='Output image path (auto-generated if not specified)')
@@ -144,10 +144,14 @@ def render_mesh(mesh_path, output_path, color_name='green', subdivision=1,
     exposure = 1.5
     bt.blenderInit(imgRes_x, imgRes_y, numSamples, exposure)
     
-    # Load mesh
+    # # Load beetle mesh
+    # location = (0, 0.09, 0.68)
+    # mesh_scale = (2, 2, 2)
+    # rotation = (90, 0, 50)
+    # Load dragon mesh
     location = (0, 0.09, 0.68)
-    mesh_scale = (2, 2, 2)
-    rotation = (90, 0, 50)
+    mesh_scale = (1, 1, 1)
+    rotation = (0, 0, 0)
     mesh = bt.readMesh(mesh_path, location, rotation, mesh_scale)
     
     # Smooth shading

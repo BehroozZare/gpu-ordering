@@ -2,19 +2,36 @@
 """
 Permutation Comparison Script
 
-Computes and visualizes ORDERING speedup of PATCH_ORDERING over AMD, METIS, and ParMETIS orderings.
+Computes and visualizes ORDERING speedup of PATCH_ORDERING over AMD, METIS, ParMETIS, and CUDSS orderings.
 
 The ordering speedup is computed as:
 - Baseline ordering time = baseline_analysis_time - patch_analysis_time
   (since baseline analysis includes internal ordering overhead, while patch analysis is "pure")
-- Patch ordering time = patch_time + ordering_time
+- Patch ordering time = patch_time + ordering_time + ordering_integration_time
 - Speedup = baseline_ordering_time / patch_ordering_time
+
+Modes:
+- 4plot: Shows 4 subplots (AMD, METIS, ParMETIS, CUDSS)
+- 3plot-cudss: Shows 3 subplots with CUDSS replacing METIS (AMD, CUDSS, ParMETIS)
 """
 
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib as mpl
+
+
+def parse_args():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(description="Permutation comparison plots")
+    parser.add_argument(
+        "--mode",
+        choices=["4plot", "3plot-cudss"],
+        default="4plot",
+        help="4plot: AMD/METIS/ParMETIS/CUDSS, 3plot-cudss: AMD/CUDSS/ParMETIS (default: 4plot)"
+    )
+    return parser.parse_args()
 
 mpl.rcParams['font.family'] = ['Palatino Linotype', 'serif']
 mpl.rcParams['font.size'] = 18
@@ -128,6 +145,47 @@ def compute_ordering_speedup(baseline_df, patch_df):
     return merged_df
 
 
+def compute_cudss_ordering_speedup(full_df):
+    """
+    Compute PATCH_ORDERING speedup over CUDSS DEFAULT (METIS) ordering.
+    
+    METIS time = ordering_integration_time from DEFAULT ordering
+    PATCH time = patch_time + ordering_time + ordering_integration_time
+    
+    Args:
+        full_df: DataFrame from laplace_full_benchmark.csv containing both
+                 DEFAULT and PATCH_ORDERING entries for CUDSS solver.
+    
+    Returns:
+        DataFrame with columns: mesh_name, G_N, metis_time, patch_ordering_time, speedup
+    """
+    # Extract baseline (CUDSS DEFAULT = internal METIS)
+    baseline_df = full_df[
+        (full_df["solver_type"] == "CUDSS") & 
+        (full_df["ordering_type"] == "DEFAULT")
+    ][["mesh_name", "G_N", "ordering_integration_time"]].rename(
+        columns={"ordering_integration_time": "metis_time"}
+    )
+    
+    # Extract and process PATCH_ORDERING data
+    patch_df = full_df[
+        (full_df["solver_type"] == "CUDSS") & 
+        (full_df["ordering_type"] == "PATCH_ORDERING")
+    ].copy()
+    patch_best_df = get_best_patch_ordering(patch_df)
+    
+    # Merge and compute speedup
+    merged_df = pd.merge(
+        baseline_df, 
+        patch_best_df[["mesh_name", "patch_ordering_time"]], 
+        on="mesh_name", 
+        how="inner"
+    )
+    merged_df["speedup"] = merged_df["metis_time"] / merged_df["patch_ordering_time"]
+    
+    return merged_df.sort_values("G_N")
+
+
 def plot_speedup(ax, merged_df, baseline_name, color='C0'):
     """Plot ordering speedup data on the given axes."""
     ax.scatter(merged_df["G_N"], merged_df["speedup"],
@@ -185,37 +243,47 @@ def plot_nnz_ratio(ax, merged_df, baseline_name, color='C0'):
 
 
 def main():
+    args = parse_args()
+    
     # Paths
     script_dir = Path(__file__).parent
     data_dir = script_dir / "data"
     result_dir = script_dir / "results"
     result_dir.mkdir(exist_ok=True)
     
-    # Load data
+    # Load data for AMD, METIS, ParMETIS comparisons
     amd_df = pd.read_csv(data_dir / "amd_benchmark.csv")
     metis_df = pd.read_csv(data_dir / "metis_benchmark.csv")
     parmetis_df = pd.read_csv(data_dir / "parmetis_benchmark.csv")
     patch_df = pd.read_csv(data_dir / "patch_amd_benchmark.csv")
     
+    # Load CUDSS data from laplace_full_benchmark.csv
+    cudss_full_df = pd.read_csv(data_dir / "laplace_full_benchmark.csv")
+    
     print(f"AMD entries: {len(amd_df)}")
     print(f"METIS entries: {len(metis_df)}")
     print(f"ParMETIS entries: {len(parmetis_df)}")
     print(f"Patch ordering entries: {len(patch_df)}")
+    print(f"CUDSS full benchmark entries: {len(cudss_full_df)}")
     
     # Get best configuration for patch ordering
     patch_best_df = get_best_patch_ordering(patch_df)
     print(f"Patch ordering (best config) entries: {len(patch_best_df)}")
     
-    # Compute ordering speedups
+    # Compute ordering speedups for AMD, METIS, ParMETIS
     amd_speedup = compute_ordering_speedup(amd_df, patch_best_df)
     metis_speedup = compute_ordering_speedup(metis_df, patch_best_df)
     parmetis_speedup = compute_ordering_speedup(parmetis_df, patch_best_df)
     
+    # Compute CUDSS ordering speedup
+    cudss_speedup = compute_cudss_ordering_speedup(cudss_full_df)
+    
     print(f"Matched pairs (AMD): {len(amd_speedup)}")
     print(f"Matched pairs (METIS): {len(metis_speedup)}")
     print(f"Matched pairs (ParMETIS): {len(parmetis_speedup)}")
+    print(f"Matched pairs (CUDSS): {len(cudss_speedup)}")
     
-    # Compute NNZ ratio improvements
+    # Compute NNZ ratio improvements (optional, kept for reference)
     amd_nnz = compute_nnz_ratio_improvement(amd_df, patch_best_df)
     metis_nnz = compute_nnz_ratio_improvement(metis_df, patch_best_df)
     parmetis_nnz = compute_nnz_ratio_improvement(parmetis_df, patch_best_df)
@@ -224,26 +292,50 @@ def main():
     print(f"NNZ ratio pairs (METIS): {len(metis_nnz)}")
     print(f"NNZ ratio pairs (ParMETIS): {len(parmetis_nnz)}")
     
-    # Create figure with 3 subplots for ordering speedup
     scale_factor = 2
-    fig1, (ax_amd, ax_metis, ax_parmetis) = plt.subplots(
-        3, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 3)
-    )
     
-    # Plot speedups
-    plot_speedup(ax_amd, amd_speedup, "AMD", color='plum')
-    plot_speedup(ax_metis, metis_speedup, "METIS", color='coral')
-    plot_speedup(ax_parmetis, parmetis_speedup, "ParMETIS", color='silver')
-    
-    # Only set x-label on bottom plot
-    ax_amd.set_xlabel("Number of mesh vertices")
-    ax_metis.set_xlabel("Number of mesh vertices")
-    ax_parmetis.set_xlabel("Number of mesh vertices")
+    if args.mode == "4plot":
+        # Mode A: 4 subplots (AMD, METIS, ParMETIS, CUDSS)
+        fig1, (ax_amd, ax_metis, ax_parmetis, ax_cudss) = plt.subplots(
+            4, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 4)
+        )
+        
+        # Plot speedups
+        plot_speedup(ax_amd, amd_speedup, "AMD", color='plum')
+        plot_speedup(ax_metis, metis_speedup, "METIS", color='coral')
+        plot_speedup(ax_parmetis, parmetis_speedup, "ParMETIS", color='silver')
+        plot_speedup(ax_cudss, cudss_speedup, "CUDSS", color='skyblue')
+        
+        # Set x-labels
+        ax_amd.set_xlabel("Number of mesh vertices")
+        ax_metis.set_xlabel("Number of mesh vertices")
+        ax_parmetis.set_xlabel("Number of mesh vertices")
+        ax_cudss.set_xlabel("Number of mesh vertices")
+        
+        output_filename = "permutation_comparison_4plot.pdf"
+        
+    else:  # args.mode == "3plot-cudss"
+        # Mode B: 3 subplots with CUDSS replacing METIS (AMD, CUDSS, ParMETIS)
+        fig1, (ax_amd, ax_cudss, ax_parmetis) = plt.subplots(
+            3, 1, figsize=(3.36 * scale_factor, 1.5 * scale_factor * 3)
+        )
+        
+        # Plot speedups (CUDSS DEFAULT ordering is METIS, so label it as METIS)
+        plot_speedup(ax_amd, amd_speedup, "AMD", color='plum')
+        plot_speedup(ax_cudss, cudss_speedup, "METIS", color='skyblue')
+        plot_speedup(ax_parmetis, parmetis_speedup, "ParMETIS", color='silver')
+        
+        # Set x-labels
+        ax_amd.set_xlabel("Number of mesh vertices")
+        ax_cudss.set_xlabel("Number of mesh vertices")
+        ax_parmetis.set_xlabel("Number of mesh vertices")
+        
+        output_filename = "permutation_comparison_cudss.pdf"
     
     plt.tight_layout()
     
     # Save the speedup figure
-    output_path = result_dir / "permutation_comparison.pdf"
+    output_path = result_dir / output_filename
     plt.savefig(output_path, dpi=150)
     print(f"Speedup plot saved to: {output_path}")
     
